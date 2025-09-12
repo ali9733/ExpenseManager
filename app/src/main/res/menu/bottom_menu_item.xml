@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:title="Transctions"
+    android:id="@+id/transction_id"
+    android:icon="@drawable/transction"/>
+
+
+    <item
+        android:title="Stastics"
+        android:id="@+id/stats_id"
+        android:icon="@drawable/graph"/>
+
+
+    <item
+        android:title="Account"
+        android:id="@+id/account_id"
+        android:icon="@drawable/account"/>
+
+
+
+</menu>
