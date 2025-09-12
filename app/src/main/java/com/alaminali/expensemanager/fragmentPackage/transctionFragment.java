@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alaminali.expensemanager.R;
+import com.alaminali.expensemanager.databinding.FragmentTransctionBinding;
 
 
 public class transctionFragment extends Fragment {
@@ -28,10 +29,29 @@ public class transctionFragment extends Fragment {
 
     }
 
+    FragmentTransctionBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        binding=FragmentTransctionBinding.inflate(inflater,container,false);
 
-        return inflater.inflate(R.layout.fragment_transction, container, false);
+        //------------------------------CODING START FROM HERE--------------------------------
+
+        /* AFTER CLICKING FLOATING BUTTON DIALOG WILL BE OPENED */
+
+        binding.floatingActionButton.setOnClickListener(v -> {
+
+            dialogFragment fragmentDialog=new dialogFragment();
+            fragmentDialog.show(getActivity().getSupportFragmentManager(), fragmentDialog.getTag());
+
+        });
+
+
+
+
+
+       //----------------------------CODING END HERE-------------------------------------------
+        return binding.getRoot();
     }
 }
