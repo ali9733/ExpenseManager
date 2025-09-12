@@ -19,5 +19,15 @@
     <color name="violate">#6200EA</color>
     <color name="splash">#E3F2FD</color>
     <color name="Darkgreen">#599003</color>
+    <color name="imageBg">#0BE2F6</color>
+
+
+
+    <color name="text_0ne">#01579B</color>
+    <color name="text_two">#263238</color>
+    <color name="text_three">#AA00FF</color>
+    <color name="text_four">#651FFF</color>
+    <color name="text_five">#C51162</color>
+    <color name="text_six">#00796B</color>
 
 </resources>

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +15,14 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.alaminali.expensemanager.R;
+import com.alaminali.expensemanager.adapterPackage.accountAdapter;
+import com.alaminali.expensemanager.adapterPackage.categoryAdapter;
+import com.alaminali.expensemanager.databinding.AccountRecyclerLayoutBinding;
+import com.alaminali.expensemanager.databinding.CategoryRecyclerLayoutBinding;
 import com.alaminali.expensemanager.databinding.FragmentDialogBinding;
 import com.alaminali.expensemanager.modelPackage.Constants;
+import com.alaminali.expensemanager.modelPackage.accountModel;
+import com.alaminali.expensemanager.modelPackage.categoryModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
@@ -122,20 +129,62 @@ public class dialogFragment extends BottomSheetDialogFragment
 
         dialogBinding.dialogCategoryId.setOnClickListener(v -> {
 
+            CategoryRecyclerLayoutBinding catBinding=CategoryRecyclerLayoutBinding.inflate(inflater);
+            AlertDialog categoryDialog=new AlertDialog.Builder(getContext()).create();
+            categoryDialog.setView(catBinding.getRoot());
+            categoryDialog.show();
+
+            categoryAdapter catAdapter=new categoryAdapter(Constants.getAllCategoryDatas(), getContext(), new categoryAdapter.setOnCategoryDataListener() {
+                @Override
+                public void onCategoryDataListener(categoryModel model, int position)
+                {
+                    dialogBinding.dialogCategoryId.setText(model.getCategoryName());
+                    categoryDialog.dismiss();
+                }
+            });
+            catBinding.categoryRecyclerViewId.setLayoutManager(new GridLayoutManager(getContext(),3));
+            catBinding.categoryRecyclerViewId.setAdapter(catAdapter);
+
+
+
         });
 
         /* WHEN CLICK SELECT ACCOUNT INPUT_EDIT_TEXT ITS OPENED A ALERT DIALOG  WITH RECYCLER VIEW ITEM */
 
         dialogBinding.dialogSelectAccountId.setOnClickListener(v -> {
 
+            AccountRecyclerLayoutBinding accountBinding=AccountRecyclerLayoutBinding.inflate(inflater);
+
+            AlertDialog accountDialog=new AlertDialog.Builder(getContext()).create();
+            accountDialog.setView(accountBinding.getRoot());
+            accountDialog.show();
+
+            accountAdapter adapter=new accountAdapter(getContext(), Constants.getAllAccountDatas(), new accountAdapter.setOnAccountDataListener() {
+                @Override
+                public void onAccountDataListener(accountModel model, int position)
+                {
+                    dialogBinding.dialogSelectAccountId.setText(model.getAccountName());
+                   accountDialog.dismiss();
+                }
+            });
+            accountBinding.accountRecyclerViewId.setLayoutManager(new GridLayoutManager(getContext(),3));
+            accountBinding.accountRecyclerViewId.setAdapter(adapter);
+
+
         });
 
 
 
        dialogBinding.saveBtnId.setOnClickListener(v -> {
+
            notes=dialogBinding.dialogNoteId.getText().toString();
+           dates=dialogBinding.selectDateId.getText().toString();
+           category=dialogBinding.dialogCategoryId.getText().toString();
+           account=dialogBinding.dialogSelectAccountId.getText().toString();
            amount=Integer.valueOf(dialogBinding.dialogAmountId.getText().toString());
            Toast.makeText(getContext(), ""+amount+notes+dates, Toast.LENGTH_SHORT).show();
+           Toast.makeText(getContext(), ""+category+account, Toast.LENGTH_SHORT).show();
+           dismiss();
        });
 
      //---------------CODING END HERE-------------------------------------
