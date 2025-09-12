@@ -41,8 +41,8 @@ public class dialogFragment extends BottomSheetDialogFragment
 
     FragmentDialogBinding dialogBinding;
 
-    public static int INCOME_BTN_TYPE=1;
-    public static int EXPENSE_BTN_TYPE=2;
+    public static int INCOME_BTN_TYPE=0;
+    public static int EXPENSE_BTN_TYPE=0;
     Calendar calendar;
 
     @Override
