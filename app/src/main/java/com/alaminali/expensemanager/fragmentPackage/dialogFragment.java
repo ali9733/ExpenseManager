@@ -44,6 +44,11 @@ public class dialogFragment extends BottomSheetDialogFragment
     public static int INCOME_BTN_TYPE=0;
     public static int EXPENSE_BTN_TYPE=0;
     Calendar calendar;
+    int amount;
+    String notes;
+    String dates;
+    String category;
+    String account;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -86,7 +91,7 @@ public class dialogFragment extends BottomSheetDialogFragment
         });
 
 
-        /* WHEN CLICK SELECT INPUT_EDIT_TEXT ITS OPENED A DIALOG BOX WITH DATE PICKER */
+        /* WHEN CLICK SELECT DATE INPUT_EDIT_TEXT ITS OPENED A DIALOG BOX WITH DATE PICKER */
 
         dialogBinding.selectDateId.setOnClickListener(new View.OnClickListener()
         {
@@ -105,6 +110,7 @@ public class dialogFragment extends BottomSheetDialogFragment
 
                         dialogBinding.selectDateId.setText(Constants.getDateFormat(calendar));
 
+                        dates=Constants.getDateFormat(calendar);
 
                     }
                 });
@@ -112,10 +118,25 @@ public class dialogFragment extends BottomSheetDialogFragment
                 dateDialog.show();
             }
         });
+        /* WHEN CLICK SELECT CATEGORY INPUT_EDIT_TEXT ITS OPENED A ALERT DIALOG  WITH RECYCLER VIEW ITEM */
+
+        dialogBinding.dialogCategoryId.setOnClickListener(v -> {
+
+        });
+
+        /* WHEN CLICK SELECT ACCOUNT INPUT_EDIT_TEXT ITS OPENED A ALERT DIALOG  WITH RECYCLER VIEW ITEM */
+
+        dialogBinding.dialogSelectAccountId.setOnClickListener(v -> {
+
+        });
 
 
 
-
+       dialogBinding.saveBtnId.setOnClickListener(v -> {
+           notes=dialogBinding.dialogNoteId.getText().toString();
+           amount=Integer.valueOf(dialogBinding.dialogAmountId.getText().toString());
+           Toast.makeText(getContext(), ""+amount+notes+dates, Toast.LENGTH_SHORT).show();
+       });
 
      //---------------CODING END HERE-------------------------------------
         return dialogBinding.getRoot();
