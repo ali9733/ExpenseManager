@@ -54,14 +54,17 @@ public class MainBaseActivity extends AppCompatActivity
                 if (idx==R.id.transction_id)
                 {
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment_replace_id,new transctionFragment()).commit();
+                    getSupportActionBar().setTitle("Transction");
                 }
                 else if (idx==R.id.account_id)
                 {
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment_replace_id,new accountFragment()).commit();
+                    getSupportActionBar().setTitle("Account");
                 }
                 else if (idx==R.id.stats_id)
                 {
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment_replace_id,new statsFragment()).commit();
+                    getSupportActionBar().setTitle("Stastics");
                 }
 
 

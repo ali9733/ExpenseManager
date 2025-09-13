@@ -55,7 +55,7 @@ public class dialogFragment extends BottomSheetDialogFragment
     public static int INCOME_BTN_TYPE=0;
     public static int EXPENSE_BTN_TYPE=0;
     Calendar calendar;
-    int amount;
+    double amount;
     String notes;
     String fullDate,shortDate;
     String category;
@@ -209,7 +209,7 @@ public class dialogFragment extends BottomSheetDialogFragment
 
            if (amount1.length()!=0)
            {
-               amount=Integer.parseInt(amount1);
+               amount=Double.parseDouble(amount1);
            }
 
            /* CHECKING ALL FIELDS THAT MUST SHOULD NOT BE  EMPTY */

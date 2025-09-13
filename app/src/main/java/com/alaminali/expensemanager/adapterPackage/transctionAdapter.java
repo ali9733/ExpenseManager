@@ -12,6 +12,8 @@ import com.alaminali.expensemanager.R;
 import com.alaminali.expensemanager.databinding.SingleItemNotFoundBinding;
 import com.alaminali.expensemanager.databinding.TransctionSingleItemBinding;
 import com.alaminali.expensemanager.dbUtils.transctionModel;
+import com.alaminali.expensemanager.interfacePackage.triggerToOpenDialogOnLongClickListener;
+import com.alaminali.expensemanager.modelPackage.Constants;
 
 import java.util.ArrayList;
 
@@ -22,10 +24,13 @@ public class transctionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Context context;
     public static int NO_DATA_FOUND=0,DATA_FOUND=1;
 
-    public transctionAdapter(ArrayList<transctionModel> transctions, Context context)
+    triggerToOpenDialogOnLongClickListener listener;
+
+    public transctionAdapter(ArrayList<transctionModel> transctions, Context context,triggerToOpenDialogOnLongClickListener listener)
     {
         this.transctions = transctions;
         this.context = context;
+        this.listener=listener;
         inflater=LayoutInflater.from(context);
     }
 
@@ -63,11 +68,36 @@ public class transctionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                  if (holder instanceof transctionItemViewHolder)
                  {
                      final transctionModel model=transctions.get(position);
-                     ((transctionItemViewHolder)holder).singleItemBinding.transctionAmountId.setText(String.valueOf(model.getAmount()));
+
                      ((transctionItemViewHolder)holder).singleItemBinding.transctionImageId.setImageResource(model.getCategoryImage());
                      ((transctionItemViewHolder)holder).singleItemBinding.transctionDateId.setText(model.getFull_date());
                      ((transctionItemViewHolder)holder).singleItemBinding.transctionAccountNameId.setText(model.getAccountName());
                      ((transctionItemViewHolder)holder).singleItemBinding.transctionCategoryNameId.setText(model.getCategoryName());
+
+                     if (model.getType().equals(Constants.INCOME))
+                     {
+                         ((transctionItemViewHolder)holder).singleItemBinding.transctionAmountId.setTextColor(context.getColor(R.color.Darkgreen));
+                         ((transctionItemViewHolder)holder).singleItemBinding.transctionAmountId.setText(String.valueOf(model.getAmount()));
+                     }
+                     else if (model.getType().equals(Constants.EXPENSE))
+                     {
+                         ((transctionItemViewHolder)holder).singleItemBinding.transctionAmountId.setTextColor(context.getColor(R.color.red));
+                         ((transctionItemViewHolder)holder).singleItemBinding.transctionAmountId.setText(String.valueOf("-"+model.getAmount()));
+
+                     }
+
+                     ((transctionItemViewHolder)holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                         @Override
+                         public boolean onLongClick(View v)
+                         {
+
+                             listener.toOpenDialogOnLongClickListener(model,holder.getAdapterPosition());
+
+                             return true;
+                         }
+                     });
+
+
                  }
 
     }

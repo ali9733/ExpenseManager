@@ -1,5 +1,8 @@
 package com.alaminali.expensemanager.fragmentPackage;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alaminali.expensemanager.R;
@@ -16,6 +20,7 @@ import com.alaminali.expensemanager.adapterPackage.transctionAdapter;
 import com.alaminali.expensemanager.databinding.FragmentTransctionBinding;
 import com.alaminali.expensemanager.dbUtils.transctionModel;
 import com.alaminali.expensemanager.dbUtils.transctionViewModel;
+import com.alaminali.expensemanager.interfacePackage.triggerToOpenDialogOnLongClickListener;
 import com.alaminali.expensemanager.modelPackage.Constants;
 import com.google.android.material.tabs.TabLayout;
 
@@ -23,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class transctionFragment extends Fragment {
+public class transctionFragment extends Fragment implements triggerToOpenDialogOnLongClickListener {
 
 
 
@@ -256,12 +261,100 @@ public class transctionFragment extends Fragment {
 
     private void finallySetDataToAdapter(ArrayList<transctionModel> transctionsRecord)
     {
+        /* calling this function for set total income, total expense and rest total */
+        setIncomeAndExpense(transctionsRecord);
 
-        transctionAdapter transAdapter=new transctionAdapter(transctionsRecord,getContext());
+        /* setting list of data to adapter */
+        transctionAdapter transAdapter=new transctionAdapter(transctionsRecord,getContext(),this);
         binding.transctionRecyclerId.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.transctionRecyclerId.setAdapter(transAdapter);
-        Toast.makeText(getContext(), "finally="+"arraylist_size="+transctionsRecord.size(), Toast.LENGTH_SHORT).show();
+
+
     }
 
+    private void setIncomeAndExpense(ArrayList<transctionModel> transctionsRecords)
+    {
+       double totalIncome=0.0,totalExpense=0.0,totalAmount=0.0;
 
+        for (transctionModel model:transctionsRecords)
+        {
+            if (model.getType().equals(Constants.INCOME))
+            {
+                totalIncome+=model.getAmount();
+            }
+            else if (model.getType().equals(Constants.EXPENSE))
+            {
+                totalExpense+= model.getAmount();
+            }
+        }
+
+        totalAmount=totalIncome+(totalExpense*-1);
+
+    binding.transExpenseId.setText("-"+totalExpense);
+    binding.transctionIncomeId.setText(String.valueOf(totalIncome));
+    binding.transTotlatMoneyId.setText(String.format("%.2f",totalAmount));
+
+    }
+
+    @Override
+    public void toOpenDialogOnLongClickListener(transctionModel model, int position)
+    {
+        LinearLayout showNote,deleteRecord;
+
+        Dialog dialog=new Dialog(getContext());
+        dialog.setContentView(R.layout.custom_dialog);
+        showNote=dialog.findViewById(R.id.shownotes_id);
+        deleteRecord=dialog.findViewById(R.id.delete_id);
+
+        /* SHOW NOTES ALERT DIALOG WILL BE OPENED TO SHOW */
+
+        showNote.setOnClickListener(v -> {
+            dialog.dismiss();
+            AlertDialog.Builder shownoteDialog=new AlertDialog.Builder(getContext());
+            shownoteDialog.setTitle("Category: "+model.getCategoryName());
+            shownoteDialog.setMessage("Notes: "+model.getNotes());
+            shownoteDialog.setCancelable(false);
+            shownoteDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+
+            shownoteDialog.show();
+
+        });
+
+        /* DELETE RECORDS ALERT DIALOG WILL BE OPENED TO SHOW */
+
+        deleteRecord.setOnClickListener(v -> {
+            dialog.dismiss();
+          AlertDialog.Builder deleteDialog=new AlertDialog.Builder(getContext());
+          deleteDialog.setCancelable(false);
+          deleteDialog.setTitle("Delete "+model.getCategoryName());
+          deleteDialog.setMessage("Are You Sure to Delete ?");
+          deleteDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which)
+              {
+                    viewModel=new ViewModelProvider(getActivity()).get(transctionViewModel.class);
+                    viewModel.deleteTransctionViewData(model.getUid());
+              }
+          });
+
+          deleteDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which)
+              {
+
+              }
+          });
+
+          deleteDialog.show();
+        });
+
+        dialog.show();
+
+    }
 }

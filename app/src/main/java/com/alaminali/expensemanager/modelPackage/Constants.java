@@ -37,7 +37,7 @@ public class Constants
         categories.add(new categoryModel("Rent",R.drawable.key,R.color.red));
         categories.add(new categoryModel("Loan",R.drawable.personal,R.color.purple_500));
         categories.add(new categoryModel("Debt",R.drawable.money_bag,R.color.text_three));
-        categories.add(new categoryModel("Other",R.drawable.other,R.color.text_five));
+        categories.add(new categoryModel("Salary",R.drawable.wages,R.color.text_five));
 
 
         return categories;

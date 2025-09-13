@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:id="@+id/dialog_amount_id"
                     android:background="@null"
                     android:layout_width="match_parent"
