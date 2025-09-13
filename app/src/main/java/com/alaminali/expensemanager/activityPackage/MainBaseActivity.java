@@ -19,9 +19,14 @@ import com.alaminali.expensemanager.fragmentPackage.statsFragment;
 import com.alaminali.expensemanager.fragmentPackage.transctionFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Calendar;
+
 public class MainBaseActivity extends AppCompatActivity
 {
     ActivityMainBaseBinding binding;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -29,6 +34,7 @@ public class MainBaseActivity extends AppCompatActivity
         binding=ActivityMainBaseBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.materialToolbar);
+
 
         /* TOOLBAR  TITLE NAME IS SETTING BELOW */
         getSupportActionBar().setTitle("Transction");

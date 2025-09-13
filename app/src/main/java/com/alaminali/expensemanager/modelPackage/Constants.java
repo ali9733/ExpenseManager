@@ -7,6 +7,7 @@ import com.alaminali.expensemanager.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class Constants
 {
@@ -15,9 +16,15 @@ public class Constants
 
     /* HERE I CREATE A SIMPLE DATE FORMAT TO SHOW  DATE FORMATTED WAY  IN DIALOG FRAGMENT'S "SELECT DATE" EDIT TEXT AND FOR USES IN  OTHER PART OF THE CODE
      BEACUSE IT WILL BE USED IN MANY PART OF THE CODE  */
-    public static String getDateFormat(Calendar calendar)
+    public static String getFullDateFormat(Calendar calendar)
     {
-        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/YY");
+        SimpleDateFormat dateFormat=new SimpleDateFormat("dd/MM/YY", Locale.getDefault());
+        return dateFormat.format(calendar.getTime());
+    }
+
+    public static String getShortDateFormat(Calendar calendar)
+    {
+        SimpleDateFormat dateFormat=new SimpleDateFormat("MM/YY", Locale.getDefault());
         return dateFormat.format(calendar.getTime());
     }
 

@@ -115,9 +115,9 @@ public class dialogFragment extends BottomSheetDialogFragment
                         calendar.set(Calendar.MONTH,view.getMonth());
                         calendar.set(Calendar.YEAR,view.getYear());
 
-                        dialogBinding.selectDateId.setText(Constants.getDateFormat(calendar));
+                        dialogBinding.selectDateId.setText(Constants.getFullDateFormat(calendar));
 
-                        dates=Constants.getDateFormat(calendar);
+                        dates=Constants.getFullDateFormat(calendar);
 
                     }
                 });
@@ -181,7 +181,7 @@ public class dialogFragment extends BottomSheetDialogFragment
            dates=dialogBinding.selectDateId.getText().toString();
            category=dialogBinding.dialogCategoryId.getText().toString();
            account=dialogBinding.dialogSelectAccountId.getText().toString();
-           amount=Integer.valueOf(dialogBinding.dialogAmountId.getText().toString());
+           amount=Integer.parseInt(dialogBinding.dialogAmountId.getText().toString());
            Toast.makeText(getContext(), ""+amount+notes+dates, Toast.LENGTH_SHORT).show();
            Toast.makeText(getContext(), ""+category+account, Toast.LENGTH_SHORT).show();
            dismiss();
