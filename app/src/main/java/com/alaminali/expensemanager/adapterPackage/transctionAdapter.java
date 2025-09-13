@@ -62,14 +62,14 @@ public class transctionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     {
                  if (holder instanceof transctionItemViewHolder)
                  {
-
+                     final transctionModel model=transctions.get(position);
+                     ((transctionItemViewHolder)holder).singleItemBinding.transctionAmountId.setText(String.valueOf(model.getAmount()));
+                     ((transctionItemViewHolder)holder).singleItemBinding.transctionImageId.setImageResource(model.getCategoryImage());
+                     ((transctionItemViewHolder)holder).singleItemBinding.transctionDateId.setText(model.getFull_date());
+                     ((transctionItemViewHolder)holder).singleItemBinding.transctionAccountNameId.setText(model.getAccountName());
+                     ((transctionItemViewHolder)holder).singleItemBinding.transctionCategoryNameId.setText(model.getCategoryName());
                  }
-                 else {
-                     if (holder instanceof noTransctionDataViewHolder)
-                     {
 
-                     }
-                 }
     }
 
     @Override

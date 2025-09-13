@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {transctionModel.class}, version =1)
+@Database(entities = {transctionModel.class}, version =2)
 public abstract class transctionDatabase extends RoomDatabase
 {
     public abstract transctionDao transDao();

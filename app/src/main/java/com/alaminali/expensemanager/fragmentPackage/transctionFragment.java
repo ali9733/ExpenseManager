@@ -186,39 +186,81 @@ public class transctionFragment extends Fragment {
 
         if (types.equals("daily"))
         {
-            Toast.makeText(getContext(), "daily="+date, Toast.LENGTH_SHORT).show();
-            finallySetDataToAdapter();
+
+           transctions.clear();
+           viewModel.getDailyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+           transctions.clear();
+           transctions.addAll(transctionModels);
+
+               finallySetDataToAdapter(transctions);
+
+
+           });
+
         }
         else if (types.equals("monthly"))
         {
-            Toast.makeText(getContext(), "monthly="+date, Toast.LENGTH_SHORT).show();
-            finallySetDataToAdapter();
+
+            transctions.clear();
+            viewModel.getMonthlyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+                transctions.clear();
+                transctions.addAll(transctionModels);
+                finallySetDataToAdapter(transctions);
+
+            });
+
         }
         else if (types.equals("updateMonthly"))
         {
-            Toast.makeText(getContext(), "updateMonthly="+date, Toast.LENGTH_SHORT).show();
-            finallySetDataToAdapter();
+
+            transctions.clear();
+            viewModel.getMonthlyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+                transctions.clear();
+                transctions.addAll(transctionModels);
+                finallySetDataToAdapter(transctions);
+
+            });
+
+
         }
         else if (types.equals("updateDaily"))
         {
-            Toast.makeText(getContext(), "updateDaily="+date, Toast.LENGTH_SHORT).show();
-            finallySetDataToAdapter();
+
+            transctions.clear();
+            viewModel.getDailyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+                transctions.clear();
+                transctions.addAll(transctionModels);
+
+                finallySetDataToAdapter(transctions);
+
+            });
+
         }
         else if (types.equals("app_launch"))
         {
-            Toast.makeText(getContext(), "app="+date+types, Toast.LENGTH_SHORT).show();
-            finallySetDataToAdapter();
+
+            transctions.clear();
+            viewModel.getDailyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+                transctions.clear();
+                transctions.addAll(transctionModels);
+
+                finallySetDataToAdapter(transctions);
+
+            });
+
         }
 
 
 
     }
 
-    private void finallySetDataToAdapter()
+    private void finallySetDataToAdapter(ArrayList<transctionModel> transctionsRecord)
     {
-        transctionAdapter transAdapter=new transctionAdapter(transctions,getContext());
+
+        transctionAdapter transAdapter=new transctionAdapter(transctionsRecord,getContext());
         binding.transctionRecyclerId.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.transctionRecyclerId.setAdapter(transAdapter);
+        Toast.makeText(getContext(), "finally="+"arraylist_size="+transctionsRecord.size(), Toast.LENGTH_SHORT).show();
     }
 
 
