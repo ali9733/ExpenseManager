@@ -71,11 +71,13 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
             {
               calendar.add(Calendar.DAY_OF_MONTH,-1);
                 updateDateWithData(calendar);
+                setDateWiseNotes();
             }
             else if (MONTHLY==2)
             {
                 calendar.add(Calendar.MONTH,-1);
                 updateDateWithData(calendar);
+                setDateWiseNotes();
             }
 
         });
@@ -86,11 +88,13 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
             {
                 calendar.add(Calendar.DAY_OF_MONTH,1);
                 updateDateWithData(calendar);
+                setDateWiseNotes();
             }
             else if (MONTHLY==2)
             {
                 calendar.add(Calendar.MONTH,1);
                 updateDateWithData(calendar);
+                setDateWiseNotes();
             }
 
         });
@@ -119,16 +123,18 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
                     DAILY=1;
                     MONTHLY=0;
                     updateDaily(calendar);
+                    setDateWiseNotes();
                 }
                 else if (tab.getText().toString().equals("monthly"))
                 {
                   MONTHLY=2;
                   DAILY=0;
                   updateMonthly(calendar);
+                    setDateWiseNotes();
                 }
                 else if (tab.getText().toString().equals("notes"))
                 {
-
+                     setDateWiseNotes();
                 }
             }
 
@@ -150,6 +156,14 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
 
        //----------------------------CODING END HERE-------------------------------------------
         return binding.getRoot();
+    }
+
+    private void setDateWiseNotes()
+    {
+        String shortDate=binding.calenderShowDateId.getText().toString();
+
+        Toast.makeText(getContext(), "length: "+shortDate.length(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), ""+shortDate, Toast.LENGTH_SHORT).show();
     }
 
     //-----------DATE SET AND DATE  UPDATION -------------------------------
