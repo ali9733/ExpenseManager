@@ -3,6 +3,7 @@ package com.alaminali.expensemanager.fragmentPackage;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.alaminali.expensemanager.R;
 import com.alaminali.expensemanager.adapterPackage.transctionAdapter;
 import com.alaminali.expensemanager.databinding.FragmentTransctionBinding;
 import com.alaminali.expensemanager.dbUtils.transctionModel;
+import com.alaminali.expensemanager.dbUtils.transctionViewModel;
 import com.alaminali.expensemanager.modelPackage.Constants;
 import com.google.android.material.tabs.TabLayout;
 
@@ -43,6 +45,7 @@ public class transctionFragment extends Fragment {
     Calendar calendar;
     public int DAILY=1;
     public int MONTHLY=0;
+    transctionViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -53,6 +56,8 @@ public class transctionFragment extends Fragment {
 
         //-----CREATE CALENDER INSTANCE------------
         calendar=Calendar.getInstance();
+        binding.calenderShowDateId.setText(Constants.getFullDateFormat(calendar));
+        setDataInTransctionAdapter(Constants.getFullDateFormat(calendar),"app_launch");
 
         //----------LEFT BUTTON CLICK TO DATE CHANGE--------
         binding.leftBtn.setOnClickListener(v -> {
@@ -97,7 +102,7 @@ public class transctionFragment extends Fragment {
 
         });
 
-        setDataInTransctionAdapter();
+        //setDataInTransctionAdapter();
         //------------TABLAYOUT TO SELECT DAILY/MONTHLY/CALENDER/NOTES---------------
 
         binding.tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -135,6 +140,9 @@ public class transctionFragment extends Fragment {
         });
 
 
+
+
+
        //----------------------------CODING END HERE-------------------------------------------
         return binding.getRoot();
     }
@@ -143,11 +151,13 @@ public class transctionFragment extends Fragment {
     private void updateMonthly(Calendar calendar)
     {
         binding.calenderShowDateId.setText(Constants.getShortDateFormat(calendar));
+        setDataInTransctionAdapter(Constants.getShortDateFormat(calendar),"updateMonthly");
     }
 
     private void updateDaily(Calendar calendar)
     {
         binding.calenderShowDateId.setText(Constants.getFullDateFormat(calendar));
+        setDataInTransctionAdapter(Constants.getFullDateFormat(calendar),"updateDaily");
     }
 
     private void updateDateWithData(Calendar calendar)
@@ -157,26 +167,56 @@ public class transctionFragment extends Fragment {
         if (DAILY==1)
         {
             binding.calenderShowDateId.setText(fullDate);
+            setDataInTransctionAdapter(fullDate,"daily");
         }
         else if (MONTHLY==2)
         {
             binding.calenderShowDateId.setText(shortDate);
+            setDataInTransctionAdapter(shortDate,"monthly");
         }
 
     }
 
     //-----------DATE SET AND DATE  UPDATION END HERE -------------------------------
 
-    private void setDataInTransctionAdapter()
+    private void setDataInTransctionAdapter(String date,String types)
     {
-
         transctions=new ArrayList<>();
-        transctions.add(new transctionModel(R.drawable.graph,2,2300,"Investment","Bank","expense","12/09/25","","this is notes"));
-        transctions.add(new transctionModel(R.drawable.personal,3,2000,"Loan","Paypal","expense","12/04/25","","this is notes"));
-        transctions.add(new transctionModel(R.drawable.graph,2,2300,"Investment","Bank","expense","12/09/25","","this is notes"));
+        viewModel=new  ViewModelProvider(getActivity()).get(transctionViewModel.class);
 
+        if (types.equals("daily"))
+        {
+            Toast.makeText(getContext(), "daily="+date, Toast.LENGTH_SHORT).show();
+            finallySetDataToAdapter();
+        }
+        else if (types.equals("monthly"))
+        {
+            Toast.makeText(getContext(), "monthly="+date, Toast.LENGTH_SHORT).show();
+            finallySetDataToAdapter();
+        }
+        else if (types.equals("updateMonthly"))
+        {
+            Toast.makeText(getContext(), "updateMonthly="+date, Toast.LENGTH_SHORT).show();
+            finallySetDataToAdapter();
+        }
+        else if (types.equals("updateDaily"))
+        {
+            Toast.makeText(getContext(), "updateDaily="+date, Toast.LENGTH_SHORT).show();
+            finallySetDataToAdapter();
+        }
+        else if (types.equals("app_launch"))
+        {
+            Toast.makeText(getContext(), "app="+date+types, Toast.LENGTH_SHORT).show();
+            finallySetDataToAdapter();
+        }
+
+
+
+    }
+
+    private void finallySetDataToAdapter()
+    {
         transctionAdapter transAdapter=new transctionAdapter(transctions,getContext());
-
         binding.transctionRecyclerId.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.transctionRecyclerId.setAdapter(transAdapter);
     }

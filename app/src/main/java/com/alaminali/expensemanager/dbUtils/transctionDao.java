@@ -32,10 +32,6 @@ public interface transctionDao
     @Query("select * from transctionTable where fullDate=:date")
     public LiveData<List<transctionModel>> getDailyTransctionDatas(String date);
 
-    @Query("select Notes from transctionTable where fullDate=:date")
-    public LiveData<List<noteModel>> getDailyTransctionNotes(String date);
 
-    @Query("select Notes from transctionTable where shortDate=:date")
-    public LiveData<List<noteModel>> getMonthlyTransctionNotes(String date);
 
 }

@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.util.Log;
@@ -20,6 +22,8 @@ import com.alaminali.expensemanager.adapterPackage.categoryAdapter;
 import com.alaminali.expensemanager.databinding.AccountRecyclerLayoutBinding;
 import com.alaminali.expensemanager.databinding.CategoryRecyclerLayoutBinding;
 import com.alaminali.expensemanager.databinding.FragmentDialogBinding;
+import com.alaminali.expensemanager.dbUtils.transctionModel;
+import com.alaminali.expensemanager.dbUtils.transctionViewModel;
 import com.alaminali.expensemanager.modelPackage.Constants;
 import com.alaminali.expensemanager.modelPackage.accountModel;
 import com.alaminali.expensemanager.modelPackage.categoryModel;
@@ -53,9 +57,11 @@ public class dialogFragment extends BottomSheetDialogFragment
     Calendar calendar;
     int amount;
     String notes;
-    String dates;
+    String fullDate,shortDate;
     String category;
-    String account;
+    String account,type=" ";
+    public int categoryImage=0;
+    transctionViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -68,6 +74,7 @@ public class dialogFragment extends BottomSheetDialogFragment
         /* WHEN CLICK INCOME BUTTON ITS BORDER AND TEXT WILL BE GREEN */
 
         dialogBinding.dialogIncomeBtnId.setOnClickListener(v -> {
+
             dialogBinding.dialogIncomeBtnId.setBackground(getActivity().getDrawable(R.drawable.selected_income_btn));
             dialogBinding.dialogIncomeBtnId.setTextColor(getContext().getColor(R.color.Darkgreen));
 
@@ -85,6 +92,7 @@ public class dialogFragment extends BottomSheetDialogFragment
         /* WHEN CLICK EXPENSE BUTTON ITS BORDER AND TEXT WILL BE RED */
 
             dialogBinding.dialogExpenseBtnId.setOnClickListener(v -> {
+
             dialogBinding.dialogExpenseBtnId.setBackground(getActivity().getDrawable(R.drawable.selected_expense_btn));
             dialogBinding.dialogExpenseBtnId.setTextColor(getContext().getColor(R.color.red));
 
@@ -117,7 +125,6 @@ public class dialogFragment extends BottomSheetDialogFragment
 
                         dialogBinding.selectDateId.setText(Constants.getFullDateFormat(calendar));
 
-                        dates=Constants.getFullDateFormat(calendar);
 
                     }
                 });
@@ -139,6 +146,7 @@ public class dialogFragment extends BottomSheetDialogFragment
                 public void onCategoryDataListener(categoryModel model, int position)
                 {
                     dialogBinding.dialogCategoryId.setText(model.getCategoryName());
+                    categoryImage=model.getCategoryImage();
                     categoryDialog.dismiss();
                 }
             });
@@ -174,17 +182,72 @@ public class dialogFragment extends BottomSheetDialogFragment
         });
 
 
-
+      //-----------------SAVE TRANSCTION BUTTON CLICK TO SAVE DATA IN DATABASE------
        dialogBinding.saveBtnId.setOnClickListener(v -> {
 
            notes=dialogBinding.dialogNoteId.getText().toString();
-           dates=dialogBinding.selectDateId.getText().toString();
+           fullDate=dialogBinding.selectDateId.getText().toString();
+           shortDate=Constants.getShortDateFormat(calendar);
            category=dialogBinding.dialogCategoryId.getText().toString();
            account=dialogBinding.dialogSelectAccountId.getText().toString();
-           amount=Integer.parseInt(dialogBinding.dialogAmountId.getText().toString());
-           Toast.makeText(getContext(), ""+amount+notes+dates, Toast.LENGTH_SHORT).show();
-           Toast.makeText(getContext(), ""+category+account, Toast.LENGTH_SHORT).show();
-           dismiss();
+           String amount1=dialogBinding.dialogAmountId.getText().toString();
+
+           /* SET INCOME OR EXPENSE BUTTON VALUE TO INSERT DATA IN DATABASE */
+
+           if (INCOME_BTN_TYPE==1)
+           {
+               type="income";
+           }
+           else if (EXPENSE_BTN_TYPE==2)
+           {
+               type="expense";
+           }
+
+
+           /* CHECKING THAT AMOUNT IS NOT EMPTY BECAUSE EMPTY DATA PARSING GIVE ERRORS */
+
+
+           if (amount1.length()!=0)
+           {
+               amount=Integer.parseInt(amount1);
+           }
+
+           /* CHECKING ALL FIELDS THAT MUST SHOULD NOT BE  EMPTY */
+           if (notes.length()!=0&&fullDate.length()!=0&&shortDate.length()!=0&&category.length()!=0&&account.length()!=0&&amount1.length()!=0&&type.trim().length()!=0)
+           {
+               Log.d("Image: ", "onCreateView: "+categoryImage);
+               Log.d("Category: ", "onCreateView: "+category);
+               Log.d("Account: ", "onCreateView: "+account);
+               Log.d("Amount: ", "onCreateView: "+amount);
+               Log.d("ShortDate: ", "onCreateView: "+shortDate);
+               Log.d("FullDate: ", "onCreateView: "+fullDate);
+               Log.d("Notes: ", "onCreateView: "+notes);
+               Log.d("Type: ", "onCreateView: "+type);
+
+               transctionModel model=new transctionModel();
+               model.setType(type);
+               model.setAmount(amount);
+               model.setAccountName(account);
+               model.setNotes(notes);
+               model.setCategoryImage(categoryImage);
+               model.setFull_date(fullDate);
+               model.setShort_date(shortDate);
+               model.setCategoryName(category);
+
+               viewModel=new ViewModelProvider(getActivity()).get(transctionViewModel.class);
+               viewModel.insertTransctionViewData(model);
+
+             //---RESET INCOME AND EXPENSE VALUE--------
+               INCOME_BTN_TYPE=0;
+               EXPENSE_BTN_TYPE=0;
+               dismiss();
+           }
+           else
+           {
+               Toast.makeText(getContext(), "Empty Field Is Detected!! ", Toast.LENGTH_SHORT).show();
+           }
+
+
        });
 
      //---------------CODING END HERE-------------------------------------

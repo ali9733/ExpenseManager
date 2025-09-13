@@ -51,14 +51,6 @@ public class transctionViewModel extends AndroidViewModel
         return repoInstance.getDailyTransctionRepoData(date);
     }
 
-    public LiveData<List<noteModel>> getDailyTransctionViewNotes(String date)
-    {
-        return repoInstance.getDailyTransctionRepoNotes(date);
-    }
 
-    public LiveData<List<noteModel>> getMonthlyTransctionViewNotes(String date)
-    {
-        return repoInstance.getMonthlyTransctionRepoNotes(date);
-    }
 
 }

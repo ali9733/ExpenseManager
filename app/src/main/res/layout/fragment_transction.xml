@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:text="09/10/2025" />
+            android:text="" />
 
         <ImageView
             android:rotation="180"
