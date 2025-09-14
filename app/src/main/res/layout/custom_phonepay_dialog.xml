@@ -36,13 +36,13 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/bank" />
+                    android:src="@drawable/phonepay" />
 
                 <TextView
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ADD BANK ACCOUNT"
+                    android:text="ADD PHONE PAY ACCOUNT"
                     android:textColor="@color/purple_700"
                     android:textSize="16sp" />
 
@@ -51,61 +51,74 @@
 
 
             <EditText
-                android:id="@+id/et_bank_name_id"
+                android:id="@+id/et_phonepay_card_number_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/unselected_btn"
-                android:hint="Enter Bank Name"
-                android:inputType="text"
+                android:hint="Enter Card Number"
+                android:inputType="number"
                 android:padding="14dp"/>
 
             <EditText
-                android:id="@+id/et_branch_name_id"
+                android:id="@+id/et_phonepay_card_cvv_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/unselected_btn"
-                android:hint="Enter Branch Name"
-                android:inputType="text"
+                android:hint="Enter CVV Number"
+                android:inputType="number"
                 android:padding="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText" />
 
             <EditText
-                android:id="@+id/et_ifsc_code_id"
+                android:id="@+id/et_phonepay_card_expiry_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/unselected_btn"
-                android:hint="Enter IFSC Code"
-                android:inputType="text"
+                android:hint="Enter Expire Date"
+                android:inputType="number"
                 android:padding="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText2" />
 
             <EditText
-                android:id="@+id/et_bank_number_id"
+                android:id="@+id/et_pahonepay_phone_number_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/unselected_btn"
-                android:hint="Enter Bank Number"
+                android:hint="Enter Phone Number"
                 android:inputType="number"
                 android:padding="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText3" />
 
+            <EditText
+                android:id="@+id/et_pahonepay_password_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/unselected_btn"
+                android:hint="Enter Password"
+                android:inputType="numberPassword"
+                android:padding="14dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText3"/>
+
             <Button
-                android:id="@+id/save_bank_btn_id"
+                android:id="@+id/save_phonepay_btn_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/btn_deisgn"
-                android:text="Save bank info"
+                android:text="Save card info"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
