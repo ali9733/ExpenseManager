@@ -181,11 +181,95 @@ public class accountFragment extends Fragment {
               });
 
              /* opened paytm dialog */
+                paytmBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
+                            dialog.dismiss();
+
+                            Dialog paytmDialog=new Dialog(getContext());
+                            paytmDialog.setContentView(R.layout.custom_paytm_dialog);
+
+
+                        //---------------------------------------------------------------------------
+                        Window window =paytmDialog.getWindow();
+                        if (window != null)
+                        {
+                            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+                            layoutParams.copyFrom(window.getAttributes());
+                            layoutParams.width = (int) (getScreenWidth() * 1); // 90% of screen width
+                            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                            window.setAttributes(layoutParams);
+                        }
+                        //-----------------------------------------------------------------------------
+
+
+                            paytmDialog.show();
+
+                    }
+                });
+             /* opened paypal dialog */
+
+             paypalBtn.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v)
+                 {
+                     dialog.dismiss();
+
+                     Dialog paypalDialog=new Dialog(getContext());
+                     paypalDialog.setContentView(R.layout.custom_paypal_dialog);
+
+
+
+                     //---------------------------------------------------------------------------
+                     Window window =paypalDialog.getWindow();
+                     if (window != null)
+                     {
+                         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+                         layoutParams.copyFrom(window.getAttributes());
+                         layoutParams.width = (int) (getScreenWidth() * 1); // 90% of screen width
+                         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                         window.setAttributes(layoutParams);
+                     }
+                     //-----------------------------------------------------------------------------
+
+
+                     paypalDialog.show();
+
+                 }
+             });
 
              /* opened phonepay dialog */
 
+             phonepayBtn.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v)
+                 {
+                     dialog.dismiss();
 
-             /* opened paypal dialog */
+                     Dialog phonepayDialog=new Dialog(getContext());
+                     phonepayDialog.setContentView(R.layout.custom_phonepay_dialog);
+
+
+                     //---------------------------------------------------------------------------
+                     Window window =phonepayDialog.getWindow();
+                     if (window != null)
+                     {
+                         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+                         layoutParams.copyFrom(window.getAttributes());
+                         layoutParams.width = (int) (getScreenWidth() * 1); // 90% of screen width
+                         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                         window.setAttributes(layoutParams);
+                     }
+                     //-----------------------------------------------------------------------------
+
+
+                     phonepayDialog.show();
+
+                 }
+             });
+
+             /* dialog end here */
 
              dialog.show();
 
