@@ -19,10 +19,11 @@ public interface bankDao
     public void updateBankingRecords(bankModel model);
 
     @Query("delete from bankTable where uid=:id")
-    public void deleteOnlineBankingRecords(int id);
+    public void deleteBankingRecords(int id);
 
     @Query("select * from bankTable")
     public LiveData<List<bankModel>> getAllBankingRecords();
+
 
 
 }
