@@ -201,13 +201,13 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
     private void setDataInTransctionAdapter(String date,String types)
     {
         transctions=new ArrayList<>();
-        viewModel=new  ViewModelProvider(getActivity()).get(transctionViewModel.class);
+        viewModel=new  ViewModelProvider(requireActivity()).get(transctionViewModel.class);
 
         if (types.equals("daily"))
         {
 
            transctions.clear();
-           viewModel.getDailyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+           viewModel.getDailyTransctionViewData(date).observe(getViewLifecycleOwner(),transctionModels -> {
            transctions.clear();
            transctions.addAll(transctionModels);
 
@@ -221,7 +221,7 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
         {
 
             transctions.clear();
-            viewModel.getMonthlyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+            viewModel.getMonthlyTransctionViewData(date).observe(getViewLifecycleOwner(),transctionModels -> {
                 transctions.clear();
                 transctions.addAll(transctionModels);
                 finallySetDataToAdapter(transctions);
@@ -233,7 +233,7 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
         {
 
             transctions.clear();
-            viewModel.getMonthlyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+            viewModel.getMonthlyTransctionViewData(date).observe(getViewLifecycleOwner(),transctionModels -> {
                 transctions.clear();
                 transctions.addAll(transctionModels);
                 finallySetDataToAdapter(transctions);
@@ -246,7 +246,7 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
         {
 
             transctions.clear();
-            viewModel.getDailyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+            viewModel.getDailyTransctionViewData(date).observe(getViewLifecycleOwner(),transctionModels -> {
                 transctions.clear();
                 transctions.addAll(transctionModels);
 
@@ -259,7 +259,7 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
         {
 
             transctions.clear();
-            viewModel.getDailyTransctionViewData(date).observe(getActivity(),transctionModels -> {
+            viewModel.getDailyTransctionViewData(date).observe(getViewLifecycleOwner(),transctionModels -> {
                 transctions.clear();
                 transctions.addAll(transctionModels);
 
@@ -279,9 +279,12 @@ public class transctionFragment extends Fragment implements triggerToOpenDialogO
         setIncomeAndExpense(transctionsRecord);
 
         /* setting list of data to adapter */
-        transctionAdapter transAdapter=new transctionAdapter(transctionsRecord,getContext(),this);
-        binding.transctionRecyclerId.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.transctionRecyclerId.setAdapter(transAdapter);
+        if (getContext()!=null)
+        {
+            transctionAdapter transAdapter=new transctionAdapter(transctionsRecord,getContext(),this);
+            binding.transctionRecyclerId.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.transctionRecyclerId.setAdapter(transAdapter);
+        }
 
 
     }
