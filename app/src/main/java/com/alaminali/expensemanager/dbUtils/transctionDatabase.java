@@ -6,10 +6,14 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {transctionModel.class}, version =2)
+@Database(entities = {transctionModel.class, bankModel.class, onlineBanking.class}, version =3)
 public abstract class transctionDatabase extends RoomDatabase
 {
     public abstract transctionDao transDao();
+
+    public abstract bankDao bankingDao();
+
+    public abstract onlineBankingDao ebankingDao();
     private static transctionDatabase Instance;
 
     public static synchronized transctionDatabase getInstance(Context context)

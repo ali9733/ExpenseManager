@@ -1,5 +1,6 @@
 package com.alaminali.expensemanager.fragmentPackage;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -14,12 +15,16 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alaminali.expensemanager.R;
 import com.alaminali.expensemanager.databinding.FragmentAccountBinding;
+import com.alaminali.expensemanager.modelPackage.Constants;
+
+import java.util.Calendar;
 
 
 public class accountFragment extends Fragment {
@@ -130,15 +135,39 @@ public class accountFragment extends Fragment {
                   @Override
                   public void onClick(View v)
                   {   dialog.dismiss();
-                      EditText card_number,card_cvv,card_expire;
+                      EditText card_number,card_cvv,card_expire,card_holder;
 
                       Dialog debitDialog=new Dialog(getContext());
                       debitDialog.setContentView(R.layout.custom_debit_dialog);
 
                       card_expire=debitDialog.findViewById(R.id.et_debit_expire_id);
-                      card_number=debitDialog.findViewById(R.id.et_debit_expire_id);
-                      card_cvv=debitDialog.findViewById(R.id.et_debit_expire_id);
+                      card_number=debitDialog.findViewById(R.id.et_debit_card_number_id);
+                      card_cvv=debitDialog.findViewById(R.id.et_debitcard_cvv_id);
+                      card_holder=debitDialog.findViewById(R.id.et_debit_card_holder_name_id);
                       Button cardBtn=debitDialog.findViewById(R.id.save_debit_btn_id);
+
+                      card_expire.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View v)
+                          {
+                              Calendar calendar=Calendar.getInstance();
+
+                              DatePickerDialog datePickerDialog=new DatePickerDialog(getContext());
+                              datePickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                                  @Override
+                                  public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
+                                  {
+                                      calendar.set(Calendar.DAY_OF_MONTH,view.getDayOfMonth());
+                                      calendar.set(Calendar.MONTH,view.getMonth());
+                                      calendar.set(Calendar.YEAR,view.getYear());
+
+                                      card_expire.setText(Constants.getShortDateFormat(calendar));
+                                  }
+                              });
+                              datePickerDialog.show();
+
+                          }
+                      });
 
                       //---------------------------------------------------------------------------
                       Window window =debitDialog.getWindow();
@@ -154,20 +183,58 @@ public class accountFragment extends Fragment {
 
                       cardBtn.setOnClickListener(v1 -> {
                          
-                          String cardNumber,cardCvv,cardExpire;
-                          cardNumber=card_number.getText().toString();
-                          cardExpire=card_expire.getText().toString();
-                          cardCvv=card_cvv.getText().toString();
+                          String cardNumber,cardCvv,cardExpire,cardHolder;
+                          cardNumber=card_number.getText().toString().trim();
+                          cardExpire=card_expire.getText().toString().trim();
+                          cardCvv=card_cvv.getText().toString().trim();
+                          cardHolder=card_holder.getText().toString().trim();
 
-                          if (cardNumber.length()!=0&&cardCvv.length()!=0&&cardExpire.length()!=0)
+                          if (cardNumber.length()!=0&&cardCvv.length()!=0&&cardExpire.length()!=0&&cardHolder.length()!=0)
                           {
-                              Log.d("Card_Number", "Item: "+cardNumber);
-                              Log.d("Card_Cvv", "Item: "+cardCvv);
-                              Log.d("Card_Expire", "Item: "+cardExpire);
 
-                              debitDialog.dismiss();
+
+                                      if (cardNumber.length()==16 && cardCvv.length()==3)
+                                      {
+                                          if (cardNumber.charAt(0)=='0')
+                                          {
+
+                                              Toast.makeText(getContext(), "Card Number and cvv can not start with zero", Toast.LENGTH_SHORT).show();
+
+                                          }
+                                          else
+                                          {
+
+                                              if (cardCvv.charAt(0)!='0')
+                                              {
+
+
+
+
+                                                  Log.d("Card_Number", "Item: "+cardNumber);
+                                                  Log.d("Card_Cvv", "Item: "+cardCvv);
+                                                  Log.d("Card_Expire", "Item: "+cardExpire);
+                                                  debitDialog.dismiss();
+                                              }
+                                              else {
+                                                  Toast.makeText(getContext(), "Card Cvv can not start with 0", Toast.LENGTH_SHORT).show();
+                                              }
+
+                                          }
+
+                                      }
+                                      else
+                                      {
+                                          Toast.makeText(getContext(), "card number 16 and cvv is 3 digit number", Toast.LENGTH_SHORT).show();
+
+
+
+                                      }
+
+
+
                           }
-                          else {
+                          else
+                          {
                               Toast.makeText(getContext(), "Field Can Not Be Empty!", Toast.LENGTH_SHORT).show();
                           }
 
@@ -290,9 +357,6 @@ public class accountFragment extends Fragment {
                 .getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.widthPixels;
     }
-
-
-
 
 
 }
