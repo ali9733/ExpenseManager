@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,7 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alaminali.expensemanager.R;
+import com.alaminali.expensemanager.adapterPackage.bankingPagerAdapter;
 import com.alaminali.expensemanager.databinding.FragmentAccountBinding;
+import com.alaminali.expensemanager.dbUtils.bankModel;
+import com.alaminali.expensemanager.dbUtils.bankViewModel;
 import com.alaminali.expensemanager.modelPackage.Constants;
 
 import java.util.Calendar;
@@ -46,6 +51,7 @@ public class accountFragment extends Fragment {
 
     FragmentAccountBinding accountBinding;
 
+   bankViewModel bankviewModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -79,12 +85,13 @@ public class accountFragment extends Fragment {
                   EditText bankName,bankBranch,bankNumber,bankIfsc;
                   Dialog bankDialog = new Dialog(getContext());
                   bankDialog.setContentView(R.layout.custom_bank_dialog);
-                  bankName=bankDialog.findViewById(R.id.et_bank_name_id);
 
+
+                 bankName=bankDialog.findViewById(R.id.et_bank_name_id);
                  bankBranch=bankDialog.findViewById(R.id.et_branch_name_id);
                  bankNumber=bankDialog.findViewById(R.id.et_bank_number_id);
                  bankIfsc=bankDialog.findViewById(R.id.et_ifsc_code_id);
-                  saveBtn = bankDialog.findViewById(R.id.save_bank_btn_id);
+                 saveBtn = bankDialog.findViewById(R.id.save_bank_btn_id);
 
 
                  Window window =bankDialog.getWindow();
@@ -102,18 +109,95 @@ public class accountFragment extends Fragment {
                      public void onClick(View v)
                      {
 
-                         String bankname=bankName.getText().toString();
-                         String bankbranch=bankBranch.getText().toString();
-                         String banknumber=bankNumber.getText().toString();
-                         String bankifsc=bankIfsc.getText().toString();
+                         String bankname=bankName.getText().toString().trim();
+                         String bankbranch=bankBranch.getText().toString().trim();
+                         String banknumber=bankNumber.getText().toString().trim();
+                         String bankifsc=bankIfsc.getText().toString().trim();
                          if (bankname.length()!=0 && bankbranch.length()!=0&&bankifsc.length()!=0&&banknumber.length()!=0)
                          {
-                             Log.d("Bank_Name", "Item: "+bankname);
-                             Log.d("Bank_branch", "Item: "+bankbranch);
-                             Log.d("Bank_Number", "Item: "+banknumber);
-                             Log.d("Bank_Ifsc", "Item: "+bankifsc);
 
-                             bankDialog.dismiss();
+                             if (bankname.length()<3)
+                             {
+                                 Toast.makeText(getContext(), "Invalid Bank Name", Toast.LENGTH_SHORT).show();
+                             }
+                             else if (bankbranch.length()<3)
+                             {
+                                 Toast.makeText(getContext(), "Invalid Branch Name", Toast.LENGTH_SHORT).show();
+                             }
+                             else if (bankifsc.length()<11)
+                             {
+                                 Toast.makeText(getContext(), "Invalid IFSC Code", Toast.LENGTH_SHORT).show();
+                             }
+                             else if (banknumber.length()<16)
+                             {
+                                 Toast.makeText(getContext(), "Invalid Bank Number", Toast.LENGTH_SHORT).show();
+                             }
+                             else
+                             {
+                                 if (bankifsc.length()==11&&banknumber.length()==16)
+                                 {
+                                     int lettercount=0,numbercount=0;
+                                     String firstChar=bankifsc.substring(0,4);
+                                     String lastNumber=bankifsc.substring(4);
+
+                                     for (char letter:firstChar.toCharArray())
+                                     {
+                                         if (Character.isLetter(letter))
+                                         {
+                                             lettercount++;
+                                         }
+
+                                     }
+
+
+                                     for (char number:lastNumber.toCharArray())
+                                     {
+                                         if (Character.isDigit(number))
+                                         {
+                                             numbercount++;
+                                         }
+
+                                     }
+
+                                     if (lettercount==4&&numbercount==7)
+                                     {
+
+                                         if (banknumber.charAt(0)!='0')
+                                         {
+
+                                                  bankviewModel=new ViewModelProvider(getActivity()).get(bankViewModel.class);
+                                                  bankModel model=new bankModel();
+                                                  model.setBankName(bankname);
+                                                  model.setBranchName(bankbranch);
+                                                  model.setBankNumber(banknumber);
+                                                  model.setIfscCode(bankifsc);
+                                                  bankviewModel.insertViewBankingRecords(model);
+                                                  bankDialog.dismiss();
+
+
+                                         }
+                                         else
+                                         {
+                                             Toast.makeText(getContext(), "bank number can not start with 0", Toast.LENGTH_SHORT).show();
+                                         }
+
+                                     }
+                                     else
+                                     {
+                                         Toast.makeText(getContext(), "Your Ifsc Number Format Is Not Correct", Toast.LENGTH_SHORT).show();
+                                     }
+
+
+                                 }
+                                 else
+                                 {
+                                     Toast.makeText(getContext(), "bank number must be 16 digit and ifsc number must be 11 digit ", Toast.LENGTH_SHORT).show();
+                                 }
+
+
+
+                             }
+
                          }
                          else {
                              Toast.makeText(getContext(), "Any Field Can Not Be Empty !", Toast.LENGTH_SHORT).show();
@@ -198,7 +282,7 @@ public class accountFragment extends Fragment {
                                           if (cardNumber.charAt(0)=='0')
                                           {
 
-                                              Toast.makeText(getContext(), "Card Number and cvv can not start with zero", Toast.LENGTH_SHORT).show();
+                                              Toast.makeText(getContext(), "Card Number  can not start with zero", Toast.LENGTH_SHORT).show();
 
                                           }
                                           else
@@ -208,11 +292,12 @@ public class accountFragment extends Fragment {
                                               {
 
 
-
+                                              /* DATA WILL BE INSERT IN DATABASE FROM HERE */
 
                                                   Log.d("Card_Number", "Item: "+cardNumber);
                                                   Log.d("Card_Cvv", "Item: "+cardCvv);
                                                   Log.d("Card_Expire", "Item: "+cardExpire);
+
                                                   debitDialog.dismiss();
                                               }
                                               else {
@@ -342,7 +427,21 @@ public class accountFragment extends Fragment {
 
          });
 
+         /* VIEW PAGER ADAPTER START FROM HERE */
 
+        bankingPagerAdapter pagerAdapter=new bankingPagerAdapter(getActivity().getSupportFragmentManager(),getLifecycle());
+        accountBinding.viewpager2Id.setAdapter(pagerAdapter);
+
+        accountBinding.viewpager2Id.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position)
+            {
+                super.onPageSelected(position);
+                accountBinding.tablayoutId.selectTab(accountBinding.tablayoutId.getTabAt(position));
+            }
+        });
+
+        /* VIEW PAGER ADAPTER END HERE */
 
         /* CODING END HERE */
          return accountBinding.getRoot();
@@ -350,7 +449,8 @@ public class accountFragment extends Fragment {
 
 
 
-       // Helper method to get screen width
+
+    // Helper method to get screen width
         private int getScreenWidth() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))

@@ -5,6 +5,8 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class bankRepositoryModel
 {
@@ -13,27 +15,39 @@ public class bankRepositoryModel
     public bankDao bankDau;
     public onlineBankingDao ebankDau;
 
+    ExecutorService executorService;
+
     public bankRepositoryModel(Application application)
     {
         database=transctionDatabase.getInstance(application);
         bankDau=database.bankingDao();
         ebankDau=database.ebankingDao();
+        executorService= Executors.newSingleThreadExecutor();
     }
 
     public void insertRepoBankingRecords(bankModel model)
     {
-        bankDau.insertBankingRecords(model);
+
+        executorService.execute(()->{
+            bankDau.insertBankingRecords(model);
+        });
     }
 
     public void updateRepoBankingRecords(bankModel model)
     {
-        bankDau.updateBankingRecords(model);
+
+        executorService.execute(()->{
+            bankDau.updateBankingRecords(model);
+        });
     }
 
 
     public void deleteRepoBankingRecords(int id)
     {
-        bankDau.deleteBankingRecords(id);
+
+        executorService.execute(()->{
+            bankDau.deleteBankingRecords(id);
+        });
     }
     public LiveData<List<bankModel>> getAllRepoBankingRecords()
     {
@@ -44,18 +58,27 @@ public class bankRepositoryModel
 
     public void insertRepoOnlineBankingRecords(onlineBanking model)
     {
-        ebankDau.insertOnlineBankingRecords(model);
+
+        executorService.execute(()->{
+            ebankDau.insertOnlineBankingRecords(model);
+        });
     }
 
     public void updateRepoOnlineBankingRecords(onlineBanking model)
     {
-        ebankDau.updateOnlineBankingRecords(model);
+
+        executorService.execute(()->{
+            ebankDau.updateOnlineBankingRecords(model);
+        });
     }
 
 
     public void deleteRepoOnlineBankingRecords(int id)
     {
-        ebankDau.deleteOnlineBankingRecords(id);
+
+        executorService.execute(()->{
+            ebankDau.deleteOnlineBankingRecords(id);
+        });
     }
     public LiveData<List<onlineBanking>> getAllRepoOnlineBankingRecords()
     {
