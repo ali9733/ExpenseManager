@@ -52,4 +52,7 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     implementation ("com.github.MrNouri:DynamicSizes:1.0")
+
+    // this below dependencies is used for text capitalization
+    implementation ("org.apache.commons:commons-text:1.10.0")
 }

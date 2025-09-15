@@ -27,7 +27,9 @@ import com.alaminali.expensemanager.adapterPackage.bankingPagerAdapter;
 import com.alaminali.expensemanager.databinding.FragmentAccountBinding;
 import com.alaminali.expensemanager.dbUtils.bankModel;
 import com.alaminali.expensemanager.dbUtils.bankViewModel;
+import com.alaminali.expensemanager.dbUtils.onlineBanking;
 import com.alaminali.expensemanager.modelPackage.Constants;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Calendar;
 
@@ -52,6 +54,7 @@ public class accountFragment extends Fragment {
     FragmentAccountBinding accountBinding;
 
    bankViewModel bankviewModel;
+   bankViewModel onlineViewModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -298,6 +301,17 @@ public class accountFragment extends Fragment {
                                                   Log.d("Card_Cvv", "Item: "+cardCvv);
                                                   Log.d("Card_Expire", "Item: "+cardExpire);
 
+                                                  onlineViewModel=new ViewModelProvider(getActivity()).get(bankViewModel.class);
+                                                  onlineBanking onlineModel=new onlineBanking();
+                                                  onlineModel.setBankingType("offline");
+                                                  onlineModel.setBankingName("Debit Card");
+                                                  onlineModel.setCardNumber(cardNumber);
+                                                  onlineModel.setCardCvv(cardCvv);
+                                                  onlineModel.setCardExpiry(cardExpire);
+
+                                                  onlineViewModel.insertViewOnlineBankingRecords(onlineModel);
+
+
                                                   debitDialog.dismiss();
                                               }
                                               else {
@@ -442,6 +456,26 @@ public class accountFragment extends Fragment {
         });
 
         /* VIEW PAGER ADAPTER END HERE */
+
+        accountBinding.tablayoutId.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab)
+            {
+                accountBinding.viewpager2Id.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab)
+            {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab)
+            {
+
+            }
+        });
 
         /* CODING END HERE */
          return accountBinding.getRoot();

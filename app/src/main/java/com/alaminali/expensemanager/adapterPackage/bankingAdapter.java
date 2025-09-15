@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import org.apache.commons.text.WordUtils;
 import com.alaminali.expensemanager.R;
 import com.alaminali.expensemanager.databinding.BankingItemBinding;
 import com.alaminali.expensemanager.databinding.SingleItemNotFoundBinding;
@@ -72,7 +72,7 @@ public class bankingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                   bankNumber = model.getBankNumber().substring(12);
               }
               ((bankingViewHolder)holder).bankingItemBinding.bankingAmountId.setText(String.valueOf(model.getBankAmount()));
-              ((bankingViewHolder)holder).bankingItemBinding.bankingNameId.setText(model.getBankName());
+              ((bankingViewHolder)holder).bankingItemBinding.bankingNameId.setText(WordUtils.capitalizeFully(model.getBankName()));
               ((bankingViewHolder)holder).bankingItemBinding.bankingNumberId.setText("xxxxxxxxxxxx"+bankNumber);
 
               ((bankingViewHolder)holder).bankingItemBinding.bankingImageId.setImageResource(R.drawable.bank);
