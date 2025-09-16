@@ -24,6 +24,10 @@ import android.widget.Toast;
 
 import com.alaminali.expensemanager.R;
 import com.alaminali.expensemanager.adapterPackage.bankingPagerAdapter;
+import com.alaminali.expensemanager.databinding.CustomDialogBinding;
+import com.alaminali.expensemanager.databinding.CustomPaypalDialogBinding;
+import com.alaminali.expensemanager.databinding.CustomPaytmDialogBinding;
+import com.alaminali.expensemanager.databinding.CustomPhonepayDialogBinding;
 import com.alaminali.expensemanager.databinding.FragmentAccountBinding;
 import com.alaminali.expensemanager.dbUtils.bankModel;
 import com.alaminali.expensemanager.dbUtils.bankViewModel;
@@ -34,9 +38,19 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.Calendar;
 
 
-public class accountFragment extends Fragment {
+public class accountFragment extends Fragment
+{
 
 
+
+    // Helper method to get screen width
+    private int getScreenWidth()
+    {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
+                .getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
+    }
 
     public accountFragment()
     {
@@ -329,8 +343,6 @@ public class accountFragment extends Fragment {
 
                                       }
 
-
-
                           }
                           else
                           {
@@ -346,15 +358,15 @@ public class accountFragment extends Fragment {
                   }
               });
 
-             /* opened paytm dialog */
+               /* opened paytm dialog */
                 paytmBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v)
                     {
                             dialog.dismiss();
-
+                            CustomPaytmDialogBinding paytmBinding=CustomPaytmDialogBinding.inflate(inflater);
                             Dialog paytmDialog=new Dialog(getContext());
-                            paytmDialog.setContentView(R.layout.custom_paytm_dialog);
+                            paytmDialog.setContentView(paytmBinding.getRoot());
 
 
                         //---------------------------------------------------------------------------
@@ -370,6 +382,104 @@ public class accountFragment extends Fragment {
                         //-----------------------------------------------------------------------------
 
 
+                        Calendar calendar=Calendar.getInstance();
+                        paytmBinding.etPaytmCardExpiryId.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                DatePickerDialog datePicker=new DatePickerDialog(getContext());
+                                datePicker.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
+                                    {
+                                        calendar.set(Calendar.DAY_OF_MONTH,view.getDayOfMonth());
+                                        calendar.set(Calendar.MONTH,view.getMonth());
+                                        calendar.set(Calendar.YEAR,view.getYear());
+
+                                       paytmBinding.etPaytmCardExpiryId.setText(Constants.getShortDateFormat(calendar));
+                                    }
+                                });
+                                datePicker.show();
+
+
+                            }
+                        });
+
+
+
+                        paytmBinding.savePaytmBtnId.setOnClickListener(v1 -> {
+
+
+                            String cardNumber = paytmBinding.etPaytmCardNumberId.getText().toString().trim();
+                            String cardCvv = paytmBinding.etPaytmCardCvvId.getText().toString().trim();
+                            String cardExpiry = paytmBinding.etPaytmCardExpiryId.getText().toString().trim();
+                            String phoneNumber = paytmBinding.etPaytmPhoneNumberId.getText().toString().trim();
+                            String password = paytmBinding.etPaytmPasswordId.getText().toString().trim();
+
+                            if (cardNumber.length() != 0 && cardCvv.length() != 0 && cardExpiry.length() != 0 && phoneNumber.length() != 0 && password.length() != 0) {
+
+
+                                if (cardNumber.length() == 16 && cardCvv.length() == 3) {
+                                    if (cardNumber.charAt(0) == '0') {
+
+                                        Toast.makeText(getContext(), "Card Number  can not start with zero", Toast.LENGTH_SHORT).show();
+
+                                    } else {
+
+                                        if (cardCvv.charAt(0) != '0') {
+
+
+                                            /* DATA WILL BE INSERT IN DATABASE FROM HERE */
+
+                                            Log.d("Card_Number", "Item: " + cardNumber);
+                                            Log.d("Card_Cvv", "Item: " + cardCvv);
+                                            Log.d("Card_Expiry", "Item: " + cardExpiry);
+                                            Log.d("PhoneNumber: ", "Item: " + phoneNumber);
+                                            Log.d("Password: ", "Item: " + password);
+
+                                            if (phoneNumber.length() == 10 && phoneNumber.charAt(0) != '0') {
+                                                onlineViewModel = new ViewModelProvider(getActivity()).get(bankViewModel.class);
+                                                onlineBanking onlineModel = new onlineBanking();
+                                                onlineModel.setBankingType("Online");
+                                                onlineModel.setBankingName("Paytm");
+                                                onlineModel.setCardNumber(cardNumber);
+                                                onlineModel.setCardCvv(cardCvv);
+                                                onlineModel.setCardExpiry(cardExpiry);
+                                                onlineModel.setPhoneNumber(phoneNumber);
+                                                onlineModel.setUserPassword(password);
+
+                                                onlineViewModel.insertViewOnlineBankingRecords(onlineModel);
+                                                paytmDialog.dismiss();
+                                            } else {
+                                                Toast.makeText(getContext(), "phone number will be 10 digit and can not start with 0", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        } else {
+                                            Toast.makeText(getContext(), "Card Cvv can not start with 0", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                } else {
+                                    Toast.makeText(getContext(), "card number 16 and cvv is 3 digit number", Toast.LENGTH_SHORT).show();
+
+
+                                }
+
+
+                            } else {
+                                Toast.makeText(getContext(), "Field Can Not Be Empty!", Toast.LENGTH_SHORT).show();
+                            }
+
+
+                            //----------------PHONE PAY DIALOG END HERE-----------------------------------
+
+                        });
+
+
+
+
+                        //----------------------
                             paytmDialog.show();
 
                     }
@@ -382,8 +492,9 @@ public class accountFragment extends Fragment {
                  {
                      dialog.dismiss();
 
+                     CustomPaypalDialogBinding paypalDialogBinding=CustomPaypalDialogBinding.inflate(inflater);
                      Dialog paypalDialog=new Dialog(getContext());
-                     paypalDialog.setContentView(R.layout.custom_paypal_dialog);
+                     paypalDialog.setContentView(paypalDialogBinding.getRoot());
 
 
 
@@ -400,6 +511,105 @@ public class accountFragment extends Fragment {
                      //-----------------------------------------------------------------------------
 
 
+                     Calendar calendar=Calendar.getInstance();
+                     paypalDialogBinding.etPaypalCardExpiryId.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v)
+                         {
+                             DatePickerDialog datePicker=new DatePickerDialog(getContext());
+                             datePicker.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                                 @Override
+                                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
+                                 {
+                                     calendar.set(Calendar.DAY_OF_MONTH,view.getDayOfMonth());
+                                     calendar.set(Calendar.MONTH,view.getMonth());
+                                     calendar.set(Calendar.YEAR,view.getYear());
+
+                                     paypalDialogBinding.etPaypalCardExpiryId.setText(Constants.getShortDateFormat(calendar));
+                                 }
+                             });
+                             datePicker.show();
+
+
+                         }
+                     });
+
+
+
+                     paypalDialogBinding.savePaypalBtnId.setOnClickListener(v1 -> {
+
+
+                         String cardNumber = paypalDialogBinding.etPaypalCardNumberId.getText().toString().trim();
+                         String cardCvv = paypalDialogBinding.etPaypalCardCvvId.getText().toString().trim();
+                         String cardExpiry = paypalDialogBinding.etPaypalCardExpiryId.getText().toString().trim();
+                         String phoneNumber = paypalDialogBinding.etPaypalPhoneNumberId.getText().toString().trim();
+                         String password = paypalDialogBinding.etPaypalPasswordId.getText().toString().trim();
+
+                         if (cardNumber.length() != 0 && cardCvv.length() != 0 && cardExpiry.length() != 0 && phoneNumber.length() != 0 && password.length() != 0) {
+
+
+                             if (cardNumber.length() == 16 && cardCvv.length() == 3) {
+                                 if (cardNumber.charAt(0) == '0') {
+
+                                     Toast.makeText(getContext(), "Card Number  can not start with zero", Toast.LENGTH_SHORT).show();
+
+                                 } else {
+
+                                     if (cardCvv.charAt(0) != '0') {
+
+
+                                         /* DATA WILL BE INSERT IN DATABASE FROM HERE */
+
+                                         Log.d("Card_Number", "Item: " + cardNumber);
+                                         Log.d("Card_Cvv", "Item: " + cardCvv);
+                                         Log.d("Card_Expiry", "Item: " + cardExpiry);
+                                         Log.d("PhoneNumber: ", "Item: " + phoneNumber);
+                                         Log.d("Password: ", "Item: " + password);
+
+                                         if (phoneNumber.length() == 10 && phoneNumber.charAt(0) != '0') {
+                                             onlineViewModel = new ViewModelProvider(getActivity()).get(bankViewModel.class);
+                                             onlineBanking onlineModel = new onlineBanking();
+                                             onlineModel.setBankingType("Online");
+                                             onlineModel.setBankingName("Paypal");
+                                             onlineModel.setCardNumber(cardNumber);
+                                             onlineModel.setCardCvv(cardCvv);
+                                             onlineModel.setCardExpiry(cardExpiry);
+                                             onlineModel.setPhoneNumber(phoneNumber);
+                                             onlineModel.setUserPassword(password);
+
+                                             onlineViewModel.insertViewOnlineBankingRecords(onlineModel);
+                                             paypalDialog.dismiss();
+                                         } else {
+                                             Toast.makeText(getContext(), "phone number will be 10 digit and can not start with 0", Toast.LENGTH_SHORT).show();
+                                         }
+
+                                     } else {
+                                         Toast.makeText(getContext(), "Card Cvv can not start with 0", Toast.LENGTH_SHORT).show();
+                                     }
+
+                                 }
+
+                             } else {
+                                 Toast.makeText(getContext(), "card number 16 and cvv is 3 digit number", Toast.LENGTH_SHORT).show();
+
+
+                             }
+
+
+                         } else {
+                             Toast.makeText(getContext(), "Field Can Not Be Empty!", Toast.LENGTH_SHORT).show();
+                         }
+
+
+                         //----------------PHONE PAY DIALOG END HERE-----------------------------------
+
+                     });
+
+                     paypalDialog.show();
+
+
+
+                    //------------------------
                      paypalDialog.show();
 
                  }
@@ -407,14 +617,16 @@ public class accountFragment extends Fragment {
 
              /* opened phonepay dialog */
 
-             phonepayBtn.setOnClickListener(new View.OnClickListener() {
+             phonepayBtn.setOnClickListener(new View.OnClickListener()
+             {
                  @Override
                  public void onClick(View v)
                  {
                      dialog.dismiss();
 
+                     CustomPhonepayDialogBinding phonepayDialogBinding=CustomPhonepayDialogBinding.inflate(inflater);
                      Dialog phonepayDialog=new Dialog(getContext());
-                     phonepayDialog.setContentView(R.layout.custom_phonepay_dialog);
+                     phonepayDialog.setContentView(phonepayDialogBinding.getRoot());
 
 
                      //---------------------------------------------------------------------------
@@ -428,10 +640,101 @@ public class accountFragment extends Fragment {
                          window.setAttributes(layoutParams);
                      }
                      //-----------------------------------------------------------------------------
+                     Calendar calendar=Calendar.getInstance();
+                     phonepayDialogBinding.etPhonepayCardExpiryId.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v)
+                         {
+                             DatePickerDialog datePicker=new DatePickerDialog(getContext());
+                             datePicker.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                                 @Override
+                                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
+                                 {
+                                     calendar.set(Calendar.DAY_OF_MONTH,view.getDayOfMonth());
+                                     calendar.set(Calendar.MONTH,view.getMonth());
+                                     calendar.set(Calendar.YEAR,view.getYear());
 
+                                     phonepayDialogBinding.etPhonepayCardExpiryId.setText(Constants.getShortDateFormat(calendar));
+                                 }
+                             });
+                             datePicker.show();
+
+
+                         }
+                     });
+
+
+
+                     phonepayDialogBinding.savePhonepayBtnId.setOnClickListener(v1 -> {
+
+
+                         String cardNumber = phonepayDialogBinding.etPhonepayCardNumberId.getText().toString().trim();
+                         String cardCvv = phonepayDialogBinding.etPhonepayCardCvvId.getText().toString().trim();
+                         String cardExpiry = phonepayDialogBinding.etPhonepayCardExpiryId.getText().toString().trim();
+                         String phoneNumber = phonepayDialogBinding.etPahonepayPhoneNumberId.getText().toString().trim();
+                         String password = phonepayDialogBinding.etPahonepayPasswordId.getText().toString().trim();
+
+                         if (cardNumber.length() != 0 && cardCvv.length() != 0 && cardExpiry.length() != 0 && phoneNumber.length() != 0 && password.length() != 0) {
+
+
+                             if (cardNumber.length() == 16 && cardCvv.length() == 3) {
+                                 if (cardNumber.charAt(0) == '0') {
+
+                                     Toast.makeText(getContext(), "Card Number  can not start with zero", Toast.LENGTH_SHORT).show();
+
+                                 } else {
+
+                                     if (cardCvv.charAt(0) != '0') {
+
+
+                                         /* DATA WILL BE INSERT IN DATABASE FROM HERE */
+
+                                         Log.d("Card_Number", "Item: " + cardNumber);
+                                         Log.d("Card_Cvv", "Item: " + cardCvv);
+                                         Log.d("Card_Expiry", "Item: " + cardExpiry);
+                                         Log.d("PhoneNumber: ", "Item: " + phoneNumber);
+                                         Log.d("Password: ", "Item: " + password);
+
+                                         if (phoneNumber.length() == 10 && phoneNumber.charAt(0) != '0') {
+                                             onlineViewModel = new ViewModelProvider(getActivity()).get(bankViewModel.class);
+                                             onlineBanking onlineModel = new onlineBanking();
+                                             onlineModel.setBankingType("Online");
+                                             onlineModel.setBankingName("Phone Pay");
+                                             onlineModel.setCardNumber(cardNumber);
+                                             onlineModel.setCardCvv(cardCvv);
+                                             onlineModel.setCardExpiry(cardExpiry);
+                                             onlineModel.setPhoneNumber(phoneNumber);
+                                             onlineModel.setUserPassword(password);
+
+                                             onlineViewModel.insertViewOnlineBankingRecords(onlineModel);
+                                             phonepayDialog.dismiss();
+                                         } else {
+                                             Toast.makeText(getContext(), "phone number will be 10 digit and can not start with 0", Toast.LENGTH_SHORT).show();
+                                         }
+
+                                     } else {
+                                         Toast.makeText(getContext(), "Card Cvv can not start with 0", Toast.LENGTH_SHORT).show();
+                                     }
+
+                                 }
+
+                             } else {
+                                 Toast.makeText(getContext(), "card number 16 and cvv is 3 digit number", Toast.LENGTH_SHORT).show();
+
+
+                             }
+
+
+                         } else {
+                             Toast.makeText(getContext(), "Field Can Not Be Empty!", Toast.LENGTH_SHORT).show();
+                         }
+
+
+                         //----------------PHONE PAY DIALOG END HERE-----------------------------------
+
+                     });
 
                      phonepayDialog.show();
-
                  }
              });
 
@@ -484,13 +787,6 @@ public class accountFragment extends Fragment {
 
 
 
-    // Helper method to get screen width
-        private int getScreenWidth() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
-                .getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.widthPixels;
-    }
 
 
 }

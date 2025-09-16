@@ -74,6 +74,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/editText" />
 
             <EditText
+                android:focusable="false"
+                android:clickable="true"
                 android:id="@+id/et_phonepay_card_expiry_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
